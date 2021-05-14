@@ -1,4 +1,4 @@
-# Voice Synthesizer API - Uberduck.ai and Vo.codes Python API
+# Vo.codes API - Vo.codes Python API
 
 Unofficial Python3 API for https://vo.codes/
 
