@@ -2,33 +2,34 @@ import re
 import time
 import json
 import logging
+from base64 import b64decode
 
 import requests
 from requests.exceptions import ConnectionError
 
+#Test!
 
-class FifteenAPI:
+class VocodesAPI:
 
-    logger = logging.getLogger('15API')
+    logger = logging.getLogger('VoCoAPI')
     logger.addHandler(logging.StreamHandler())
 
     max_text_len = 500
 
     tts_headers = {
-        "accept": "application/json, text/plain, */*",
-        "accept-encoding": "gzip, deflate, br",
-        "accept-language": "en-US,en;q=0.9",
-        "access-control-allow-origin": "*",
-        "content-type": "application/json;charset=UTF-8",
-        "origin": "https://fifteen.ai",
-        "referer": "https://fifteen.ai/app",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
-        "user-agent": "python-requests 15.ai-Python-API(https://github.com/wafflecomposite/15.ai-Python-API)"
+        'Connection': 'keep-alive',
+        'Accept': 'application/json',
+        'User-Agent': 'python-requests uberduck.ai-Python-API(https://github.com/TheSmallBlue/Uberduck.ai-Python-API)',
+        'Content-Type': 'application/json',
+        'Origin': 'https://vo.codes',
+        'Sec-Fetch-Site': 'cross-site',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': 'https://vo.codes/',
+        'Accept-Language': 'en-US,en;q=0.9,es-AR;q=0.8,es;q=0.7'
     }
 
-    tts_url = "https://api.15.ai/app/getAudioFile"
+    tts_url = "https://mumble.stream/speak_spectrogram"
 
 
     def __init__(self, show_debug = False):
@@ -36,13 +37,12 @@ class FifteenAPI:
             self.logger.setLevel(logging.DEBUG)
         else:
             self.logger.setLevel(logging.WARNING)
-        self.logger.info("FifteenAPI initialization")
+        self.logger.info("VocodesAPI initialization")
 
 
-    def get_tts_raw(self, character, emotion, text):
+    def get_tts_raw(self, character, text):
 
         resp = {"status": "NOT SET", "data": None}
-
 
         text_len = len(text)
         if text_len > self.max_text_len:
@@ -57,11 +57,10 @@ class FifteenAPI:
 
         self.logger.info(f'Target text: [{text}]')
         self.logger.info(f'Character: [{character}]')
-        self.logger.info(f'Emotion: [{emotion}]')
 
-        data = json.dumps({"text": text, "character": character, "emotion": emotion})
+        data = json.dumps({"text": text, "speaker": character})
 
-        self.logger.info('Waiting for 15.ai response...')
+        self.logger.info('Waiting for vo.codes response...')
 
         try:
             response = requests.post(self.tts_url, data=data, headers=self.tts_headers)
@@ -72,21 +71,21 @@ class FifteenAPI:
 
         if response.status_code == 200:
             resp["status"] = "OK"
-            resp["data"] = response.content
-            self.logger.info(f"15.ai API response success")
+            resp["data"] = b64decode(json.loads(response.content)['audio_base64'])
+            self.logger.info(f"vo.codes API response success")
             return resp
         else:
-            self.logger.error(f'15.ai API request error, Status code: {response.status_code}')
-            resp["status"] = f'15.ai API request error, Status code: {response.status_code}'
+            self.logger.error(f'vo.codes API request error, Status code: {response.status_code}')
+            resp["status"] = f'vo.codes API request error, Status code: {response.status_code}'
         return resp
         
-    def save_to_file(self, character, emotion, text, filename=None):
-        tts = self.get_tts_raw(character, emotion, text)
+    def save_to_file(self, character, text, filename=None):
+        tts = self.get_tts_raw(character, text)
         if tts["status"] == "OK" and tts["data"] is not None:
             if filename is None:
                 char_filename_part = "".join(x for x in character[:10] if x.isalnum())
                 text_filename_part = "".join(x for x in text[:16] if x.isalnum())
-                filename = f"15ai-{char_filename_part}-{text_filename_part}-{round(time.time())}.wav"
+                filename = f"vocodes-{char_filename_part}-{text_filename_part}-{round(time.time())}.wav"
             if not filename.endswith(".wav"):
                 filename += ".wav"
             f = open(filename, 'wb')
@@ -100,17 +99,15 @@ class FifteenAPI:
 
 
 if __name__ == "__main__":
-    fifteen = FifteenAPI(show_debug = True)
+    vocodes = VocodesAPI(show_debug = True)
 
-    print("Visit https://fifteen.ai/app to find available characters and their emotions.")
+    print("Visit https://vo.codes to find available characters and their emotions.")
 
     input_str = None
     while input_str != "quit":
         print("Input character (Case sensitive!):")
         character = input()
-        print(f"Input emotion (Case sensitive!):")
-        emotion = input()
         print("Input text:")
         text = input()
         print("Processing...")
-        fifteen.save_to_file(character, emotion, text)
+        vocodes.save_to_file(character, text)
