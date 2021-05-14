@@ -17,7 +17,7 @@ Grab the `vocodes_api.py` and throw it where you want to use it.
 ### As command line tool:
 You can use `vocodes_api.py` as executable in terminal. Launch it with
     python3 vocodes_api.py
- Visit https://uberduck.ai/ or https://vo.codes/, find the character's name through inspect element, and use them right there to get your text-to-speech dreams come true as .wav files. (**WARNING**: Character's names case sensitive! You'll get a server error if you type them in incorrectly.)
+ Visit https://vo.codes/, find the character's name through inspect element, and use them right there to get your text-to-speech dreams come true as .wav files. (**WARNING**: Character's names case sensitive! You'll get a server error if you type them in incorrectly.)
 ### As imported module in python code:
 
 Suppose you put `vocodes_api.py` next to the file in which you want to use it:
