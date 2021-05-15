@@ -19,7 +19,7 @@ class VocodesAPI:
     tts_headers = {
         'Connection': 'keep-alive',
         'Accept': 'application/json',
-        'User-Agent': 'python-requests uberduck.ai-Python-API(https://github.com/TheSmallBlue/Uberduck.ai-Python-API)',
+        'User-Agent': 'python-requests vo.codes.ai-Python-API(https://github.com/TheSmallBlue/Vo.codes-Python-API)',
         'Content-Type': 'application/json',
         'Origin': 'https://vo.codes',
         'Sec-Fetch-Site': 'cross-site',
