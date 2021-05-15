@@ -42,7 +42,7 @@ Alternatively, to automatically generate a unique file name
 Example output on successful request: 
 
 
-    {'status': 'OK', 'filename': 'uberduck-homer-simpson-Thisisatestte-1588057995.wav'}
+    {'status': 'OK', 'filename': 'vocodes-homer-simpson-Thisisatestte-1588057995.wav'}
 Example output on failed request: 
 
      {'status': 'Reason_why_it_failed', 'filename': None}
